@@ -1,2 +1,8 @@
 # -
 文件断点下载方案
+* 断点续传方法一(此方法只能用在，程序不退出的情况下)
+NSURLSessionDownloadTask对象的cancelByProducingResumeData方法会获得resumeData对象，其中包含了需要下载的文件和下载进度等信息。当需要断点续传的时候只需调用downloadTaskWithResumeData:resumeData方法传入resumeData即可实现断点续传。
+注意：这种方法，当用户正在下载的时候，程序退出，则无法实现断点下载，因为程序退出没有机会调用cancelByProducingResumeData方法获取到resumeData。
+
+* 断点续传方法二(本例中的方法)
+使用NSURLSessionDataTask，手动边下载边写入文件，当需要断点下载的时候，根据已经下载的文件大小设置请求头的Range属性，进行文件下载，脱离downloadTask的resumeData的缺陷
